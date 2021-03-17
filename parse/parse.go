@@ -1,6 +1,7 @@
 package parse
 
 import (
+	"context"
 	"github.com/PuerkitoBio/goquery"
 	"strings"
 	"sync"
@@ -9,8 +10,8 @@ import (
 var DefaultExecOrder = []string{"selects", "each", "select_params", "nodes", "has", "contains"}
 
 type SelectParams struct {
-	ExecOrder      ExecOrder    `json:"exec_order"`
-	Selects        Selects      `json:"selects"`
+	ExecOrder      ExecOrder     `json:"exec_order"`
+	Selects        Selects       `json:"selects"`
 	Each           *Each         `json:"each"`
 	SelectParams   *SelectParams `json:"select_params"`
 	Nodes          *Node         `json:"nodes"`
@@ -30,7 +31,7 @@ type (
 )
 
 // ParsingHtml is 解析html的入口
-func (params *HashMapSelectParams) ParsingHtml(html string, ds *DocumentSelection) (res map[string]interface{}, err error) {
+func (params *HashMapSelectParams) ParsingHtml(ctx context.Context, html string, ds *DocumentSelection) (res map[string]interface{}, err error) {
 	if html != "" && ds == nil {
 		doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 		if err != nil {
@@ -38,17 +39,20 @@ func (params *HashMapSelectParams) ParsingHtml(html string, ds *DocumentSelectio
 		}
 		ds = &DocumentSelection{
 			Selection: doc.Selection,
-			Node:      nil,
 		}
 	}
-	res = params.InitResMap()
+	res = map[string]interface{}{}
 	wg := sync.WaitGroup{}
+	lock := &sync.Mutex{}
 	for key, selectParams := range *params {
 		res[key] = nil
 		wg.Add(1)
 		go func(key string, selectParams *SelectParams) {
 			defer wg.Done()
-			res[key] = ds.parse(selectParams)
+			val, _ := ds.parse(ctx, selectParams)
+			lock.Lock()
+			res[key] = val
+			lock.Unlock()
 		}(key, selectParams)
 	}
 	wg.Wait()
