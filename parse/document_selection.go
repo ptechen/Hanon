@@ -13,7 +13,6 @@ type DocumentSelection struct {
 
 func NewDocumentSelectionByNode(ctx context.Context, node *html.Node) (res *DocumentSelection) {
 	return &DocumentSelection{Selection: &goquery.Selection{Nodes: []*html.Node{node}}}
-
 }
 
 func (p DocumentSelection) parse(ctx context.Context, params *SelectParams) (interface{}, error) {
@@ -72,11 +71,18 @@ func (p *DocumentSelection) parseKey(ctx context.Context, params *SelectParams, 
 	return nil
 }
 
-func (p *DocumentSelection) content(ctx context.Context, params *SelectParams) (string, error) {
+func (p *DocumentSelection) content(ctx context.Context, params *SelectParams) (interface{}, error) {
 	if params.TextAttrHtml == nil {
 		params.TextAttrHtml = newTextAttrHtml()
 	}
-	return params.TextAttrHtml.call(ctx, p)
+	data, err := params.TextAttrHtml.call(ctx, p)
+	if err != nil {
+		return "", err
+	}
+	if params.DataFormat != nil {
+		return params.DataFormat.DataFormat(ctx, data), err
+	}
+	return data, err
 }
 
 func (p *DocumentSelection) selects(ctx context.Context, params []string) {

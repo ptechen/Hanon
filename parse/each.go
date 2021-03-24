@@ -3,12 +3,12 @@ package parse
 import "context"
 
 type Each struct {
-	All    *SelectParams        `yaml:"all"`
-	One    *SelectParams        `yaml:"one"`
-	Fields *HashMapSelectParams `yaml:"fields"`
+	All    *SelectParams        `json:"all" yaml:"all"`
+	One    *SelectParams        `json:"one" yaml:"one"`
+	Fields *HashMapSelectParams `json:"fields" yaml:"fields"`
 }
 
-func (p *Each) each(ctx context.Context, ds *DocumentSelection) interface{}{
+func (p *Each) each(ctx context.Context, ds *DocumentSelection) interface{} {
 	if p.All != nil {
 		return p.all(ctx, ds)
 	} else if p.One != nil {
@@ -50,7 +50,7 @@ func (p *Each) one(ctx context.Context, ds *DocumentSelection) interface{} {
 	return p.One.defaultVal(ctx)
 }
 
-func (p *Each) fields(ctx context.Context, ds *DocumentSelection) interface{}{
+func (p *Each) fields(ctx context.Context, ds *DocumentSelection) interface{} {
 	array := make([]interface{}, 0, len(ds.Selection.Nodes))
 	for _, node := range ds.Selection.Nodes {
 		curDs := NewDocumentSelectionByNode(ctx, node)

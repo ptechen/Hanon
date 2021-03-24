@@ -8,3 +8,15 @@ contains:
       class:
         - city
 
+each_contains:
+  selects:
+    - ul
+    - li
+    - div
+  each:
+    all:
+      contains:
+        contains:
+          class:
+            - city
+
