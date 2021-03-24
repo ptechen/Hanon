@@ -1,18 +1,18 @@
-each_fields:
-  selects:
-    - ul
-    - li
-  each:
-    fields:
-      city_field:
-        selects:
-          - .city
-          - a
-      code_field:
-        selects:
-          - .code
-          - a
-
+#each_fields:
+#  selects:
+#    - ul
+#    - li
+#  each:
+#    fields:
+#      city_field:
+#        selects:
+#          - .city
+#          - a
+#      code_field:
+#        selects:
+#          - .code
+#          - a
+#
 #each:
 #  selects:
 #    - ul
@@ -28,11 +28,6 @@ each_fields:
 #            - '上海'
 #          html:
 #            - '上海'
-#        not_contains:
-#          text:
-#            - '上海'
-#          html:
-#            - '上海'
 #
 #each_one:
 #  selects:
@@ -44,19 +39,29 @@ each_fields:
 #        - .city
 #        - a
 #
-#each_one_contains:
+#each_all:
 #  selects:
 #    - ul
 #    - li
 #  each:
-#    one:
+#    all:
 #      selects:
 #        - .city
 #        - a
-#      contains:
-#        contains:
-#          text:
-#            - 上海
-#        not_contains:
-#          text:
-#            - 杭州
+
+each_one_contains:
+  selects:
+    - ul
+    - li
+  each:
+    one:
+      selects:
+        - .city
+        - a
+      contains:
+        contains:
+          text:
+            - 上海
+        not_contains:
+          text:
+            - 杭州

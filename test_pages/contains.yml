@@ -1,0 +1,10 @@
+contains:
+  selects:
+    - ul
+    - li
+    - div
+  contains:
+    contains:
+      class:
+        - city
+

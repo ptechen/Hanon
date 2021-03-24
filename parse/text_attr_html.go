@@ -5,16 +5,14 @@ import (
 )
 
 type TextAttrHtml struct {
-	Text bool   `json:"text"`
-	Html bool   `json:"html"`
-	Attr string `json:"attr"`
+	Text bool   `yaml:"text"`
+	Html bool   `yaml:"html"`
+	Attr string `yaml:"attr"`
 }
 
 func newTextAttrHtml() *TextAttrHtml {
 	return &TextAttrHtml{
 		Text: true,
-		Html: false,
-		Attr: "",
 	}
 }
 
@@ -31,7 +29,8 @@ func (p *TextAttrHtml) call(ctx context.Context, ds *DocumentSelection) (string,
 }
 
 func (p *TextAttrHtml) text(ctx context.Context, ds *DocumentSelection) string {
-	return ds.Selection.Text()
+	val := ds.Selection.Text()
+	return val
 }
 
 func (p *TextAttrHtml) html(ctx context.Context, ds *DocumentSelection) (string, error) {

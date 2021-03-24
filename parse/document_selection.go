@@ -2,27 +2,21 @@ package parse
 
 import (
 	"context"
+	"errors"
 	"github.com/PuerkitoBio/goquery"
 	"golang.org/x/net/html"
 )
 
 type DocumentSelection struct {
-	Selection *goquery.Selection
-}
-
-func NewDocumentSelection(ctx context.Context, selection *goquery.Selection) (res *DocumentSelection) {
-	return &DocumentSelection{
-		Selection: selection,
-	}
+	Selection *goquery.Selection `json:"selection"`
 }
 
 func NewDocumentSelectionByNode(ctx context.Context, node *html.Node) (res *DocumentSelection) {
-	return &DocumentSelection{
-		Selection: &goquery.Selection{Nodes: []*html.Node{node}},
-	}
+	return &DocumentSelection{Selection: &goquery.Selection{Nodes: []*html.Node{node}}}
+
 }
 
-func (p *DocumentSelection) parse(ctx context.Context, params *SelectParams) (interface{}, error) {
+func (p DocumentSelection) parse(ctx context.Context, params *SelectParams) (interface{}, error) {
 	return p.parseExecOrder(ctx, params)
 }
 
@@ -36,7 +30,7 @@ func (p *DocumentSelection) parseExecOrder(ctx context.Context, params *SelectPa
 			if params.Each == nil {
 				continue
 			}
-			return params.Each.each(ctx, p)
+			return params.Each.each(ctx, p), nil
 
 		case "select_params":
 			if params.SelectParams == nil {
@@ -44,30 +38,38 @@ func (p *DocumentSelection) parseExecOrder(ctx context.Context, params *SelectPa
 			}
 			return p.parse(ctx, params)
 		default:
-			p.parseKey(ctx, params, val)
+			err := p.parseKey(ctx, params, val)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	return p.content(ctx, params)
 }
 
-func (p *DocumentSelection) parseKey(ctx context.Context, params *SelectParams, key string)  {
+func (p *DocumentSelection) parseKey(ctx context.Context, params *SelectParams, key string) error {
 	switch key {
 	case "selects":
 		if params.Selects == nil {
-			return
+			return nil
 		}
 		p.selects(ctx, params.Selects)
 	case "nodes":
 		if params.Nodes == nil {
-			return
+			return nil
 		}
-		params.Nodes.run(ctx, p)
-	//case "has":
-	//	if params.Has == nil {
-	//		return
-	//	}
-	//	params.Has.
+		params.Nodes.call(ctx, p)
+
+	case "contains":
+		if params.Contains == nil {
+			return nil
+		}
+		ok := params.Contains.call(ctx, p)
+		if !ok {
+			return errors.New("class or attr or html or text is not exist")
+		}
 	}
+	return nil
 }
 
 func (p *DocumentSelection) content(ctx context.Context, params *SelectParams) (string, error) {
@@ -77,16 +79,8 @@ func (p *DocumentSelection) content(ctx context.Context, params *SelectParams) (
 	return params.TextAttrHtml.call(ctx, p)
 }
 
-func (p *DocumentSelection) selects(ctx context.Context, params []string)  {
+func (p *DocumentSelection) selects(ctx context.Context, params []string) {
 	for _, param := range params {
 		p.Selection = p.Selection.Find(param)
 	}
-}
-
-func (p *DocumentSelection) html(ctx context.Context, params *SelectParams) (interface{}, error) {
-	return p.Selection.Html()
-}
-
-func (p *DocumentSelection) text(ctx context.Context, params *SelectParams) string {
-	return p.Selection.Text()
 }
