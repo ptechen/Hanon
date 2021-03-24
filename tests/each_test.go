@@ -2,10 +2,10 @@ package tests
 
 import (
 	"Hanon/parse"
-	"fmt"
 	"github.com/ptechen/config"
 	"golang.org/x/net/context"
 	"io/ioutil"
+	"reflect"
 	"testing"
 )
 
@@ -23,5 +23,14 @@ func TestEach(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Println(res)
+	v := map[string]interface{}{"each": []interface{}{"上海"},
+		"each_all": []interface{}{"北京", "上海", "杭州"},
+		"each_fields": []interface{}{
+			map[string]interface{}{"city_field": "北京", "code_field": "1"},
+			map[string]interface{}{"city_field": "上海", "code_field": "2"},
+			map[string]interface{}{"city_field": "杭州", "code_field": "3"}},
+		"each_one": "北京", "each_one_contains": "上海"}
+	if !reflect.DeepEqual(res, v) {
+		t.Errorf("left: %#v, right: %#v", res, v)
+	}
 }

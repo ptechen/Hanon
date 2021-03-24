@@ -2,10 +2,10 @@ package tests
 
 import (
 	"Hanon/parse"
-	"fmt"
 	"github.com/ptechen/config"
 	"golang.org/x/net/context"
 	"io/ioutil"
+	"reflect"
 	"testing"
 )
 
@@ -23,5 +23,8 @@ func TestNodes(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Println(res)
+	v := map[string]interface {}{"eq":"first", "first":"first", "last":"last", "last1":""}
+	if !reflect.DeepEqual(res, v) {
+		t.Errorf("left: %#v, right: %#v", res, v)
+	}
 }

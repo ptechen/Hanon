@@ -2,10 +2,10 @@ package tests
 
 import (
 	"Hanon/parse"
-	"fmt"
 	"github.com/ptechen/config"
 	"golang.org/x/net/context"
 	"io/ioutil"
+	"reflect"
 	"testing"
 )
 
@@ -23,5 +23,8 @@ func TestContains(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Println(res)
+	v := map[string]interface{}{"contains": "北京北京1上海2杭州3", "each_contains": []interface{}{"北京", "杭州"}}
+	if !reflect.DeepEqual(res, v) {
+		t.Errorf("left: %#v, right: %#v", res, v)
+	}
 }

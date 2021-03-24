@@ -1,22 +1,22 @@
 contains:
   selects:
-    - ul
-    - li
     - div
-  contains:
-    contains:
-      class:
-        - city
-
-each_contains:
-  selects:
-    - ul
-    - li
-    - div
+    - a
   each:
     all:
       contains:
         contains:
           class:
-            - city
+            - test
+          attr:
+            - href
+            - src
+          text:
+            - test
+        not_contains:
+          class:
+            - test1
+          text:
+            - test1
+
 

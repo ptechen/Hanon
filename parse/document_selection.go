@@ -15,6 +15,10 @@ func NewDocumentSelectionByNode(ctx context.Context, node *html.Node) (res *Docu
 	return &DocumentSelection{Selection: &goquery.Selection{Nodes: []*html.Node{node}}}
 }
 
+func NewDocumentSelectionBySelection(ctx context.Context, selection *goquery.Selection) (res *DocumentSelection) {
+	return &DocumentSelection{Selection: selection}
+}
+
 func (p DocumentSelection) parse(ctx context.Context, params *SelectParams) (interface{}, error) {
 	return p.parseExecOrder(ctx, params)
 }
@@ -63,7 +67,7 @@ func (p *DocumentSelection) parseKey(ctx context.Context, params *SelectParams, 
 		if params.Contains == nil {
 			return nil
 		}
-		ok := params.Contains.call(ctx, p)
+		ok := params.Contains.call(ctx, *p)
 		if !ok {
 			return errors.New("class or attr or html or text is not exist")
 		}

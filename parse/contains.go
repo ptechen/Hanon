@@ -17,28 +17,34 @@ type TextClassAttrHtml struct {
 	Text     []string `yaml:"text"`
 }
 
-func (p *Contains) call(ctx context.Context, ds *DocumentSelection) bool {
+func (p *Contains) call(ctx context.Context, ds DocumentSelection) bool {
 	if p.contains(ctx, ds) && p.notContains(ctx, ds) {
 		return true
 	}
 	return false
 }
 
-func (p *Contains) contains(ctx context.Context, ds *DocumentSelection) bool {
+func (p *Contains) contains(ctx context.Context, ds DocumentSelection) bool {
 	if p.Contains == nil {
 		return true
 	}
 	return p.Contains.containsCall(ctx, ds)
 }
 
-func (p *Contains) notContains(ctx context.Context, ds *DocumentSelection) bool {
+func (p *Contains) notContains(ctx context.Context, ds DocumentSelection) bool {
 	if p.NotContains == nil {
 		return true
 	}
 	return p.NotContains.notContainsCall(ctx, ds)
 }
 
-func (p *TextClassAttrHtml) containsCall(ctx context.Context, ds *DocumentSelection) bool {
+func (p *TextClassAttrHtml) containsCall(ctx context.Context, ds DocumentSelection) bool {
+	if p.Html != nil {
+		if !p.html(ctx, ds) {
+			return false
+		}
+	}
+
 	if p.Class != nil {
 		if !p.class(ctx, ds) {
 			return false
@@ -57,16 +63,17 @@ func (p *TextClassAttrHtml) containsCall(ctx context.Context, ds *DocumentSelect
 		}
 	}
 
-	if p.Html != nil {
-		if !p.html(ctx, ds) {
-			return false
-		}
-	}
+
 
 	return true
 }
 
-func (p *TextClassAttrHtml) notContainsCall(ctx context.Context, ds *DocumentSelection) bool {
+func (p *TextClassAttrHtml) notContainsCall(ctx context.Context, ds DocumentSelection) bool {
+	if p.Html != nil {
+		if p.html(ctx, ds) {
+			return false
+		}
+	}
 	if p.Class != nil {
 		if p.class(ctx, ds) {
 			return false
@@ -85,16 +92,12 @@ func (p *TextClassAttrHtml) notContainsCall(ctx context.Context, ds *DocumentSel
 		}
 	}
 
-	if p.Html != nil {
-		if p.html(ctx, ds) {
-			return false
-		}
-	}
+
 
 	return true
 }
 
-func (p *TextClassAttrHtml) html(ctx context.Context, ds *DocumentSelection) bool {
+func (p *TextClassAttrHtml) html(ctx context.Context, ds DocumentSelection) bool {
 	html, _ := ds.Selection.Html()
 	for _, pat := range p.Html {
 		if !strings.Contains(html, pat) {
@@ -104,7 +107,7 @@ func (p *TextClassAttrHtml) html(ctx context.Context, ds *DocumentSelection) boo
 	return true
 }
 
-func (p *TextClassAttrHtml) text(ctx context.Context, ds *DocumentSelection) bool {
+func (p *TextClassAttrHtml) text(ctx context.Context, ds DocumentSelection) bool {
 	text := ds.Selection.Text()
 	for _, pat := range p.Text {
 		if !strings.Contains(text, pat) {
@@ -114,8 +117,8 @@ func (p *TextClassAttrHtml) text(ctx context.Context, ds *DocumentSelection) boo
 	return true
 }
 
-func (p *TextClassAttrHtml) attr(ctx context.Context, ds *DocumentSelection) bool {
-	for _, pat := range p.Text {
+func (p *TextClassAttrHtml) attr(ctx context.Context, ds DocumentSelection) bool {
+	for _, pat := range p.Attr {
 		_, b := ds.Selection.Attr(pat)
 		if !b {
 			return false
@@ -124,7 +127,7 @@ func (p *TextClassAttrHtml) attr(ctx context.Context, ds *DocumentSelection) boo
 	return true
 }
 
-func (p *TextClassAttrHtml) class(ctx context.Context, ds *DocumentSelection) bool {
+func (p *TextClassAttrHtml) class(ctx context.Context, ds DocumentSelection) bool {
 	for _, pat := range p.Class {
 		if !ds.Selection.HasClass(pat) {
 			return false
