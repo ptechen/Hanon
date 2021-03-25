@@ -1,4 +1,4 @@
-package parse
+package parse_html
 
 import (
 	"context"
@@ -18,8 +18,17 @@ type TextClassAttrHtml struct {
 }
 
 func (p *Contains) call(ctx context.Context, ds DocumentSelection) bool {
-	if p.contains(ctx, ds) && p.notContains(ctx, ds) {
-		return true
+	if len(ds.Selection.Nodes) == 1 {
+		if p.contains(ctx, ds) && p.notContains(ctx, ds) {
+			return true
+		}
+	} else {
+		for _, node := range ds.Selection.Nodes {
+			curDs := NewDocumentSelectionByNode(node)
+			if p.contains(ctx, *curDs) && p.notContains(ctx, *curDs) {
+				return true
+			}
+		}
 	}
 	return false
 }
@@ -91,9 +100,6 @@ func (p *TextClassAttrHtml) notContainsCall(ctx context.Context, ds DocumentSele
 			return false
 		}
 	}
-
-
-
 	return true
 }
 

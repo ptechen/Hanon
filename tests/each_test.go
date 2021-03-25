@@ -1,8 +1,8 @@
 package tests
 
 import (
-	"Hanon/parse"
 	"github.com/ptechen/config"
+	"github.com/ptechen/hanon/parse_html"
 	"golang.org/x/net/context"
 	"io/ioutil"
 	"reflect"
@@ -15,7 +15,7 @@ func TestEach(t *testing.T) {
 		t.Error(err)
 	}
 	dataStr := string(dataBytes)
-	params := &parse.HashMapSelectParams{}
+	params := &parse_html.HashMapSelectParams{}
 	config.New().YAML("../test_pages/each.yml", params)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

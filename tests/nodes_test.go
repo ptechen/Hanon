@@ -1,8 +1,8 @@
 package tests
 
 import (
-	"Hanon/parse"
 	"github.com/ptechen/config"
+	"github.com/ptechen/hanon/parse_html"
 	"golang.org/x/net/context"
 	"io/ioutil"
 	"reflect"
@@ -15,7 +15,7 @@ func TestNodes(t *testing.T) {
 		t.Error(err)
 	}
 	dataStr := string(dataBytes)
-	params := &parse.HashMapSelectParams{}
+	params := &parse_html.HashMapSelectParams{}
 	config.New().YAML("../test_pages/nodes.yml", params)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -23,7 +23,8 @@ func TestNodes(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	v := map[string]interface {}{"eq":"first", "first":"first", "last":"last", "last1":""}
+	v := map[string]interface{}{"children": "123", "eq": "first1", "first": "first", "last": "123",
+		"next_sibling": "first1last", "parent": "\n    first\n    first1\n    last\n", "prev_sibling": "first1"}
 	if !reflect.DeepEqual(res, v) {
 		t.Errorf("left: %#v, right: %#v", res, v)
 	}

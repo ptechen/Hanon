@@ -12,6 +12,6 @@ attr:
 
 html:
   selects:
-    - a
+    - .test
   text_attr_html:
     html: true

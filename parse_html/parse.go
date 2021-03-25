@@ -1,9 +1,9 @@
-package parse
+package parse_html
 
 import (
-	"Hanon/data_format"
 	"context"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/ptechen/hanon/data_format"
 	"strings"
 	"sync"
 )
@@ -20,8 +20,6 @@ type SelectParams struct {
 	TextAttrHtml   *TextAttrHtml           `json:"text_attr_html" yaml:"text_attr_html"`
 	DataFormat     *data_format.DataFormat `json:"data_format" yaml:"data_format"`
 	DefaultValType string                  `json:"default_val_type" yaml:"default_val_type"`
-
-	doc *goquery.Document
 }
 
 type (

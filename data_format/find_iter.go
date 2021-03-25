@@ -13,7 +13,7 @@ func (p FindIter) findIter(ctx context.Context, params string) []string {
 		if matched {
 			reg := regexp.MustCompile(s)
 			res := reg.FindStringSubmatch(params)
-			return res[1:]
+			return res
 		}
 	}
 	return []string{}

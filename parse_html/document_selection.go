@@ -1,4 +1,4 @@
-package parse
+package parse_html
 
 import (
 	"context"
@@ -11,12 +11,8 @@ type DocumentSelection struct {
 	Selection *goquery.Selection `json:"selection"`
 }
 
-func NewDocumentSelectionByNode(ctx context.Context, node *html.Node) (res *DocumentSelection) {
+func NewDocumentSelectionByNode(node *html.Node) (res *DocumentSelection) {
 	return &DocumentSelection{Selection: &goquery.Selection{Nodes: []*html.Node{node}}}
-}
-
-func NewDocumentSelectionBySelection(ctx context.Context, selection *goquery.Selection) (res *DocumentSelection) {
-	return &DocumentSelection{Selection: selection}
 }
 
 func (p DocumentSelection) parse(ctx context.Context, params *SelectParams) (interface{}, error) {
@@ -79,7 +75,7 @@ func (p *DocumentSelection) content(ctx context.Context, params *SelectParams) (
 	if params.TextAttrHtml == nil {
 		params.TextAttrHtml = newTextAttrHtml()
 	}
-	data, err := params.TextAttrHtml.call(ctx, p)
+	data, err := params.TextAttrHtml.call(ctx, p, params.Contains)
 	if err != nil {
 		return "", err
 	}

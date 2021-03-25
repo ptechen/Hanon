@@ -6,33 +6,33 @@ import (
 )
 
 type Splits []*Split
+type Index int
 
 type Split struct {
-	Key    string `json:"key" yaml:"key"`
-	Index  int    `json:"index" yaml:"index"`
-	Enable bool   `json:"enable" yaml:"enable"`
+	Key   string `json:"key" yaml:"key"`
+	Index *Index `json:"index" yaml:"index"`
 }
 
 func (s Splits) splits(ctx context.Context, params string) interface{} {
 	for _, split := range s {
-		if split.Enable {
-			params = split.splitEnableTrue(ctx, params)
+		if split.Index != nil {
+			params = split.splitIndex(ctx, params)
 		} else {
-			return split.splitEnableTrue(ctx, params)
+			return split.split(ctx, params)
 		}
 	}
-	return nil
+	return params
 }
 
-func (s Split) splitEnableTrue(ctx context.Context, params string) string {
+func (s Split) splitIndex(ctx context.Context, params string) string {
 	data := strings.Split(params, s.Key)
-	if s.Index < len(data) {
-		return data[s.Index]
+	if int(*s.Index) < len(data) {
+		return data[int(*s.Index)]
 	} else {
 		return ""
 	}
 }
 
-func (s Split) splitEnableFalse(ctx context.Context, params string) []string {
+func (s Split) split(ctx context.Context, params string) []string {
 	return strings.Split(params, s.Key)
 }

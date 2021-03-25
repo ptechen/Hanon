@@ -1,4 +1,4 @@
-module Hanon
+module github.com/ptechen/hanon
 
 go 1.16
 

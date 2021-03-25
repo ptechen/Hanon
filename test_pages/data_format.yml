@@ -1,0 +1,46 @@
+deletes:
+  selects:
+    - .deletes
+  data_format:
+    deletes:
+      - test
+
+replaces:
+  selects:
+    - .deletes
+  data_format:
+    replaces:
+      - from: test
+        to: 1234
+
+splits:
+  selects:
+    - .splits
+  data_format:
+    splits:
+      - key: 123
+
+splits_index:
+  selects:
+    - .splits
+  data_format:
+    splits:
+      - key: 123
+        index: 0
+
+find:
+  selects:
+    - .find
+  data_format:
+    find:
+      - '(test432)'
+      - '(123)'
+
+find_iter:
+  selects:
+    - .find_iter
+  data_format:
+    find_iter:
+      - '(test432)'
+      - '(123)'
+

@@ -19,4 +19,22 @@ contains:
           text:
             - test1
 
+contains_html:
+  selects:
+    - div
+    - a
+  contains:
+    contains:
+      html:
+        - test5
+
+contains_attr:
+  selects:
+    - div
+    - a
+  contains:
+    contains:
+      attr:
+        - href
+
 

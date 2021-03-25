@@ -13,7 +13,7 @@ func (p Find) find(ctx context.Context, params string) string {
 		if matched {
 			reg := regexp.MustCompile(s)
 			res := reg.FindStringSubmatch(params)
-			return res[1]
+			return res[0]
 		}
 	}
 	return ""
