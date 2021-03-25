@@ -1,0 +1,15 @@
+- regex: <div class="test1">
+  err: 123
+  fields:
+    test:
+      selects:
+        - a
+  version: 1
+
+- regex: <div class="test">
+  fields:
+    test:
+      selects:
+        - .test
+        - a
+  version: 2

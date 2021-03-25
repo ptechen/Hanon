@@ -6,7 +6,7 @@ import (
 	"regexp"
 )
 
-type MatchHtml struct {
+type MatchParseHtml struct {
 	/// Regex match html
 	Regex string `json:"regex" yaml:"regex"`
 	/// Custom error message, return error message directly if the regular expression matches successfully
@@ -17,7 +17,11 @@ type MatchHtml struct {
 	Version string `json:"version" yaml:"version"`
 }
 
-type MatchHtmlMany []*MatchHtml
+type MatchHtmlMany []*MatchParseHtml
+
+type RegexesMatchParseHtml struct {
+	RegexesMatchParseHtml []*MatchParseHtml `json:"regexes_match_parse_html" yaml:"regexes_match_parse_html"`
+}
 
 // RegexesMatchParseHtml is 正则匹配解析 html 入口
 func (p *MatchHtmlMany) RegexesMatchParseHtml(ctx context.Context, html string) (map[string]interface{}, error) {
@@ -33,7 +37,12 @@ func (p *MatchHtmlMany) RegexesMatchParseHtml(ctx context.Context, html string) 
 		if matchHtml.Err != "" {
 			return nil, errors.New(matchHtml.Err)
 		}
-		return matchHtml.Fields.ParsingHtml(ctx, html)
+		data, err := matchHtml.Fields.ParsingHtml(ctx, html)
+		if err != nil {
+			return nil, err
+		}
+		data["version"] = matchHtml.Version
+		return data, err
 	}
 	return nil, nil
 }
