@@ -36,6 +36,7 @@ func (p *DocumentSelection) parseExecOrder(ctx context.Context, params *SelectPa
 				continue
 			}
 			return p.parse(ctx, params)
+
 		default:
 			err := p.parseKey(ctx, params, val)
 			if err != nil {
@@ -53,6 +54,7 @@ func (p *DocumentSelection) parseKey(ctx context.Context, params *SelectParams, 
 			return nil
 		}
 		p.selects(ctx, params.Selects)
+
 	case "nodes":
 		if params.Nodes == nil {
 			return nil
