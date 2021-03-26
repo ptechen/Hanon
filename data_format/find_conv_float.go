@@ -6,22 +6,23 @@ import (
 	"strconv"
 )
 
-type FindConvInt []string
+type FindConvFloat []string
 
-func (p FindConvInt) findConvInt(ctx context.Context, params string) interface{} {
+
+func (p FindConvFloat) findConvFloat(ctx context.Context, params string) interface{} {
 	for _, s := range p {
 		matched, _ := regexp.MatchString(s, params)
 		if matched {
 			reg := regexp.MustCompile(s)
 			res := reg.FindStringSubmatch(params)
-			n, _ := string2int(res[1])
+			n, _ := string2float(res[1])
 			return *n
 		}
 	}
 	return nil
 }
 
-func string2int(params string) (Int, error) {
-	n, err := strconv.Atoi(params)
+func string2float(params string) (Float64, error) {
+	n, err := strconv.ParseFloat(params, 64)
 	return &n, err
 }

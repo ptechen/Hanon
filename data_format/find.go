@@ -25,7 +25,7 @@ func (p Find) string(ctx context.Context, params string) string {
 		if matched {
 			reg := regexp.MustCompile(s)
 			res := reg.FindStringSubmatch(params)
-			return res[0]
+			return res[1]
 		}
 	}
 	return ""

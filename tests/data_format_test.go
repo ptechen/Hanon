@@ -23,8 +23,8 @@ func TestDataFormat(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	v := map[string]interface {}{"deletes":"ttttt", "find":"123", "find_conv_int":"123",
-		"find_iter":[]string{"123", "123"}, "replaces":"1234ttttt", "splits":[]string{"testt", "tttt"}, "splits_index":"testt"}
+	v := map[string]interface {}{"deletes":"ttttt", "find":"123", "find_conv_int":123, "find_iter":[]string{"123"},
+		"replaces":"1234ttttt", "splits":[]string{"testt", "tttt"}, "splits_index":"testt"}
 	if !reflect.DeepEqual(res, v) {
 		t.Errorf("left: %#v, right: %#v", res, v)
 	}

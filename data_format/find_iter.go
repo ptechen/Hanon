@@ -25,7 +25,7 @@ func (p FindIter) string(ctx context.Context, params string) []string {
 		if matched {
 			reg := regexp.MustCompile(s)
 			res := reg.FindStringSubmatch(params)
-			return res
+			return res[1:]
 		}
 	}
 	return []string{}

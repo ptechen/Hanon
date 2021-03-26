@@ -51,3 +51,9 @@ find_conv_int:
     find_conv_int:
       - '(\d+)'
 
+find_conv_float:
+  selects:
+    - .find_conv_float
+  data_format:
+    find_conv_float:
+      - '(\d+.\d+)'

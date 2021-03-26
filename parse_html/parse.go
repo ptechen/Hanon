@@ -30,6 +30,7 @@ type (
 
 // ParsingHtml is 解析html的入口
 func (params *HashMapSelectParams) ParsingHtml(ctx context.Context, html string) (res map[string]interface{}, err error) {
+	html = strings.ReplaceAll(html," ", "")
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {
 		return nil, err
