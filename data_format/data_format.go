@@ -2,15 +2,16 @@ package data_format
 
 import "context"
 
-var DataFormatExecOrder = []string{"deletes", "replaces", "splits", "find", "find_iter"}
+var DataFormatExecOrder = []string{"deletes", "replaces", "splits", "find", "find_iter", "find_conv_int"}
 
 type DataFormat struct {
-	ExecOrder []string `json:"exec_order" yaml:"exec_order"`
-	Splits    Splits   `json:"splits" yaml:"splits"`
-	Deletes   Deletes  `json:"deletes" yaml:"deletes"`
-	Replaces  Replaces `json:"replaces" yaml:"replaces"`
-	Find      Find     `json:"find" yaml:"find"`
-	FindIter  FindIter `json:"find_iter" yaml:"find_iter"`
+	ExecOrder   []string    `json:"exec_order" yaml:"exec_order"`
+	Splits      Splits      `json:"splits" yaml:"splits"`
+	Deletes     Deletes     `json:"deletes" yaml:"deletes"`
+	Replaces    Replaces    `json:"replaces" yaml:"replaces"`
+	Find        Find        `json:"find" yaml:"find"`
+	FindIter    FindIter    `json:"find_iter" yaml:"find_iter"`
+	FindConvInt FindConvInt `json:"find_conv_int" yaml:"find_conv_int"`
 }
 
 func (p *DataFormat) DataFormat(ctx context.Context, params interface{}) interface{} {
@@ -52,6 +53,13 @@ func (p *DataFormat) dataFormat(ctx context.Context, pat, params interface{}) in
 			param, ok := params.(string)
 			if ok {
 				return p.FindIter.findIter(ctx, param)
+			}
+		}
+	case "find_conv_int":
+		if p.FindConvInt != nil {
+			param, ok := params.(string)
+			if ok {
+				return p.FindConvInt.findConvInt(ctx, param)
 			}
 		}
 	}

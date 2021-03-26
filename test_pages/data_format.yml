@@ -44,3 +44,10 @@ find_iter:
       - '(test432)'
       - '(123)'
 
+find_conv_int:
+  selects:
+    - .find_conv_int
+  data_format:
+    find_conv_int:
+      - '(\d+)'
+

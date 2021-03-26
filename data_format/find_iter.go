@@ -11,6 +11,8 @@ func (p FindIter) findIter(ctx context.Context, params interface{}) interface{} 
 	switch params.(type) {
 	case string:
 		return p.string(ctx, params.(string))
+	case []interface{}:
+		return p.slice(ctx, params.([]interface{}))
 	case map[string]interface{}:
 		return p.hashmap(ctx, params.(map[string]interface{}))
 	}
